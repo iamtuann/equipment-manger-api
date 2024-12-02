@@ -21,7 +21,8 @@ public class EquipmentDto {
     private Date warrantyDate;
     private Date createdAt;
     private Date updatedAt;
-    private DepartmentDto department;
+    private String department;
+    private String storage;
 
     public EquipmentDto(Equipment equipment) {
         this.id = equipment.getId();
@@ -32,6 +33,7 @@ public class EquipmentDto {
         this.warrantyDate = equipment.getWarrantyDate();
         this.createdAt = equipment.getCreatedAt();
         this.updatedAt = equipment.getUpdatedAt();
-        this.department = new DepartmentDto(equipment.getDepartment());
+        this.department = equipment.getDepartment() != null ? equipment.getDepartment().getName() : null;
+        this.storage = equipment.getStorage() != null ? equipment.getStorage().getName() : null;
     }
 }

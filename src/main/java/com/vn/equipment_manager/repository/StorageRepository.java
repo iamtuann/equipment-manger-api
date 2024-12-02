@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository(value = "storageRepository")
 public interface StorageRepository extends JpaRepository<Storage, Long> {
+    Storage findStorageById(long id);
 }

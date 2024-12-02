@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository(value = "equipmentTypeRepository")
 public interface EquipmentTypeRepository extends JpaRepository<EquipmentType, Long> {
+    EquipmentType findEquipmentTypeById(long id);
 }
