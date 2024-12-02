@@ -3,6 +3,7 @@ package com.vn.equipment_manager.service.impl;
 import com.vn.equipment_manager.entity.Department;
 import com.vn.equipment_manager.exception.ResourceNotFoundException;
 import com.vn.equipment_manager.model.DepartmentDto;
+import com.vn.equipment_manager.model.DepartmentStatistic;
 import com.vn.equipment_manager.model.request.DepartmentRequest;
 import com.vn.equipment_manager.repository.DepartmentRepository;
 import com.vn.equipment_manager.service.DepartmentService;
@@ -19,10 +20,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
 
     @Override
-    public List<DepartmentDto> getAll() {
-        List<Department> departments = departmentRepository.findAll();
-        return departments.stream()
-                .map(DepartmentDto::new).collect(Collectors.toList());
+    public List<DepartmentStatistic> getAll() {
+        return departmentRepository.getDepartmentStatistics();
     }
 
     @Override
@@ -45,5 +44,15 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .orElseThrow(() -> new ResourceNotFoundException("Department", "id", id));
         department.setName(request.getName());
         departmentRepository.save(department);
+    }
+
+    @Override
+    public void delete(long id) {
+        boolean isExist = departmentRepository.existsById(id);
+        if (isExist) {
+            departmentRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("Department", "id", id);
+        }
     }
 }

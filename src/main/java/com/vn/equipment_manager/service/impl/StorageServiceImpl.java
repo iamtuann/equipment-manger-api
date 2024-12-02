@@ -48,4 +48,14 @@ public class StorageServiceImpl implements StorageService {
         storage.setDescription(request.getDescription());
         storageRepository.save(storage);
     }
+
+    @Override
+    public void delete(long id) {
+        boolean isExist = storageRepository.existsById(id);
+        if (isExist) {
+            storageRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("Storage", "id", id);
+        }
+    }
 }

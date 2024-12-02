@@ -1,6 +1,7 @@
 package com.vn.equipment_manager.controller;
 
 import com.vn.equipment_manager.model.DepartmentDto;
+import com.vn.equipment_manager.model.DepartmentStatistic;
 import com.vn.equipment_manager.model.request.DepartmentRequest;
 import com.vn.equipment_manager.service.DepartmentService;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @GetMapping("")
-    public ResponseEntity<List<DepartmentDto>> getAll() {
-        List<DepartmentDto> response = departmentService.getAll();
+    public ResponseEntity<List<DepartmentStatistic>> getAll() {
+        List<DepartmentStatistic> response = departmentService.getAll();
         return ResponseEntity.ok(response);
     }
 
@@ -37,5 +38,11 @@ public class DepartmentController {
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody DepartmentRequest request) {
         departmentService.update(id, request);
         return ResponseEntity.ok("Update Department successfully!");
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        departmentService.delete(id);
+        return ResponseEntity.ok("Delete Department successfully!");
     }
 }

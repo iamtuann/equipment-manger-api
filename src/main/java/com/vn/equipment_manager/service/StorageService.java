@@ -14,4 +14,6 @@ public interface StorageService {
     void create(StorageRequest request);
 
     void update(long id, StorageRequest request);
+
+    void delete(long id);
 }

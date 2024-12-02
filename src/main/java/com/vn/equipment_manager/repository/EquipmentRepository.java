@@ -21,8 +21,8 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
             "AND (:typeId IS NULL OR e.type.id = :typeId) " +
             "AND (:departmentId IS NULL OR e.department.id = :departmentId) " +
             "AND (:storageId IS NULL OR e.storage.id = :storageId) " +
-            "AND (:receiveDate IS NULL OR e.receiveDate = :receiveDate) " +
-            "AND (:warrantyDate IS NULL OR e.warrantyDate = :warrantyDate) ")
+            "AND (:receiveDate IS NULL OR e.receiveDate <= :receiveDate) " +
+            "AND (:warrantyDate IS NULL OR e.warrantyDate >= :warrantyDate) ")
     Page<Equipment> search(@Param(value = "code") String code,
                            @Param(value = "status") Integer status,
                            @Param(value = "typeId") Long typeId,

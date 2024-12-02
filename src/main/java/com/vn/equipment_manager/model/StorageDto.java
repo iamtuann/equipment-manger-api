@@ -17,13 +17,10 @@ public class StorageDto {
     private Long id;
     private String name;
     private String description;
-    private List<EquipmentDto> equipments;
 
     public StorageDto(Storage storage) {
         this.id = storage.getId();
         this.name = storage.getName();
         this.description = storage.getDescription();
-        this.equipments = storage.getEquipments().stream()
-                .map(EquipmentDto::new).collect(Collectors.toList());
     }
 }

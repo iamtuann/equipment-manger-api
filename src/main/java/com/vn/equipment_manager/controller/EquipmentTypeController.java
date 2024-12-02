@@ -39,4 +39,10 @@ public class EquipmentTypeController {
         equipmentTypeService.update(id, request);
         return ResponseEntity.ok("Update EquipmentType successfully!");
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        equipmentTypeService.delete(id);
+        return ResponseEntity.ok("Delete EquipmentType successfully!");
+    }
 }

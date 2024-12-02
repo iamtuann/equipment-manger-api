@@ -16,7 +16,7 @@ public interface StorageRepository extends JpaRepository<Storage, Long> {
             "       COUNT(DISTINCT e.type.id), " +
             "       COUNT(e)) " +
             "FROM Equipment e " +
-            "JOIN Storage s ON e.storage.id = s.id " +
+            "RIGHT JOIN Storage s ON e.storage.id = s.id " +
             "GROUP BY s.id, s.name")
     List<StorageStatistic> getStorageStatistics();
 }

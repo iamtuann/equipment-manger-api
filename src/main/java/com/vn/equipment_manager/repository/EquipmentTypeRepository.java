@@ -17,7 +17,7 @@ public interface EquipmentTypeRepository extends JpaRepository<EquipmentType, Lo
             "COUNT(CASE WHEN e.status = 0 THEN 1 ELSE NULL END), " +
             "COUNT(CASE WHEN e.department.id IS NOT NULL THEN 1 ELSE NULL END)) " +
             "FROM Equipment e " +
-            "JOIN EquipmentType et ON e.type.id = et.id " +
+            "RIGHT JOIN EquipmentType et ON e.type.id = et.id " +
             "GROUP BY et.id, et.name, et.price")
     List<EquipmentTypeStatistic> getTypeStatistic();
 }

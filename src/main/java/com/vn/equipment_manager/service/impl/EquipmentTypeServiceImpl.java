@@ -50,4 +50,14 @@ public class EquipmentTypeServiceImpl implements EquipmentTypeService {
         type.setPrice(request.getPrice());
         equipmentTypeRepository.save(type);
     }
+
+    @Override
+    public void delete(long id) {
+        boolean isExist = equipmentTypeRepository.existsById(id);
+        if (isExist) {
+            equipmentTypeRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException("EquipmentType", "id", id);
+        }
+    }
 }

@@ -94,8 +94,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     @Override
     public void delete(long id) {
-        boolean isExit = equipmentRepository.existsById(id);
-        if (isExit) {
+        boolean isExist = equipmentRepository.existsById(id);
+        if (isExist) {
             equipmentRepository.deleteById(id);
         } else {
             throw new ResourceNotFoundException("Equipment", "id", id);

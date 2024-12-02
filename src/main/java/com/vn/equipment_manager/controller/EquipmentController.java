@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,8 @@ public class EquipmentController {
                                     @RequestParam(value = "typeId", required = false) Long typeId,
                                     @RequestParam(value = "departmentId", required = false) Long departmentId,
                                     @RequestParam(value = "storageId", required = false) Long storageId,
-                                    @RequestParam(value = "receiveDate", required = false) Date receiveDate,
-                                    @RequestParam(value = "warrantyDate", required = false) Date warrantyDate,
+                                    @RequestParam(value = "receiveDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date receiveDate,
+                                    @RequestParam(value = "warrantyDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date warrantyDate,
                                     @RequestParam(value = "page", defaultValue = "1", required = false) int page,
                                     @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize,
                                     @RequestParam(value = "key", required = false) String key,

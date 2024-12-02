@@ -39,4 +39,10 @@ public class StorageController {
         storageService.update(id, request);
         return ResponseEntity.ok("Update Storage successfully!");
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        storageService.delete(id);
+        return ResponseEntity.ok("Delete Storage successfully!");
+    }
 }
