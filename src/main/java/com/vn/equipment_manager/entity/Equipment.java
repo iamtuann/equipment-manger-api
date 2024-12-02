@@ -46,4 +46,14 @@ public class Equipment {
     @JoinColumn(name = "storage_id")
     private Storage storage;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = new Date();
+    }
 }
