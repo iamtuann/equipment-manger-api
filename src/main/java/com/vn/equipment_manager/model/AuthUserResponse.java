@@ -1,11 +1,17 @@
 package com.vn.equipment_manager.model;
 
+import com.vn.equipment_manager.entity.Role;
 import com.vn.equipment_manager.entity.User;
 import com.vn.equipment_manager.security.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,12 +23,17 @@ public class AuthUserResponse {
     private String firstName;
     private String lastName;
     private String token;
+    private List<String> roles;
 
-    public AuthUserResponse(UserDetailsImpl userDetails, String token) {
+    public AuthUserResponse(Authentication authentication, String token) {
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         this.id = userDetails.getId();
         this.username = userDetails.getUsername();
         this.firstName = userDetails.getFirstName();
         this.lastName = userDetails.getLastName();
+        this.roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
         this.token = token;
     }
 
@@ -31,6 +42,9 @@ public class AuthUserResponse {
         this.username = user.getUsername();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.roles = user.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toList());
         this.token = token;
     }
 }

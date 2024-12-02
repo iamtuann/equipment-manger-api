@@ -1,6 +1,7 @@
 package com.vn.equipment_manager.controller;
 
 import com.vn.equipment_manager.model.EquipmentTypeDto;
+import com.vn.equipment_manager.model.EquipmentTypeStatistic;
 import com.vn.equipment_manager.model.request.EquipmentTypeRequest;
 import com.vn.equipment_manager.service.EquipmentTypeService;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ public class EquipmentTypeController {
     private final EquipmentTypeService equipmentTypeService;
 
     @GetMapping("")
-    public ResponseEntity<List<EquipmentTypeDto>> getAll() {
-        List<EquipmentTypeDto> response = equipmentTypeService.getAll();
+    public ResponseEntity<List<EquipmentTypeStatistic>> getAll() {
+        List<EquipmentTypeStatistic> response = equipmentTypeService.getAll();
         return ResponseEntity.ok(response);
     }
 

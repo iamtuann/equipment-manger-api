@@ -1,6 +1,7 @@
 package com.vn.equipment_manager.controller;
 
 import com.vn.equipment_manager.model.StorageDto;
+import com.vn.equipment_manager.model.StorageStatistic;
 import com.vn.equipment_manager.model.request.StorageRequest;
 import com.vn.equipment_manager.service.StorageService;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ public class StorageController {
     private final StorageService storageService;
 
     @GetMapping("")
-    public ResponseEntity<List<StorageDto>> getAll() {
-        List<StorageDto> response = storageService.getAll();
+    public ResponseEntity<List<StorageStatistic>> getAll() {
+        List<StorageStatistic> response = storageService.getAll();
         return ResponseEntity.ok(response);
     }
 

@@ -4,6 +4,7 @@ import com.vn.equipment_manager.entity.Storage;
 import com.vn.equipment_manager.exception.ResourceNotFoundException;
 import com.vn.equipment_manager.mapper.StorageMapper;
 import com.vn.equipment_manager.model.StorageDto;
+import com.vn.equipment_manager.model.StorageStatistic;
 import com.vn.equipment_manager.model.request.StorageRequest;
 import com.vn.equipment_manager.repository.StorageRepository;
 import com.vn.equipment_manager.service.StorageService;
@@ -20,10 +21,8 @@ public class StorageServiceImpl implements StorageService {
     private final StorageMapper storageMapper;
 
     @Override
-    public List<StorageDto> getAll() {
-        List<Storage> storages = storageRepository.findAll();
-        return storages.stream()
-                .map(storageMapper::toDtoWithoutEquipment).collect(Collectors.toList());
+    public List<StorageStatistic> getAll() {
+        return storageRepository.getStorageStatistics();
     }
 
     @Override

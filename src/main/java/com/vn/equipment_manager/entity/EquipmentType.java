@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +28,9 @@ public class EquipmentType {
 
     @Column(name = "price")
     private Double price;
+
+    @OneToMany(mappedBy = "type", fetch = FetchType.LAZY)
+    private List<Equipment> equipments;
 
     @PrePersist
     public void prePersist() {

@@ -3,6 +3,7 @@ package com.vn.equipment_manager.service.impl;
 import com.vn.equipment_manager.entity.EquipmentType;
 import com.vn.equipment_manager.exception.ResourceNotFoundException;
 import com.vn.equipment_manager.model.EquipmentTypeDto;
+import com.vn.equipment_manager.model.EquipmentTypeStatistic;
 import com.vn.equipment_manager.model.request.EquipmentTypeRequest;
 import com.vn.equipment_manager.repository.EquipmentTypeRepository;
 import com.vn.equipment_manager.service.EquipmentTypeService;
@@ -19,10 +20,9 @@ public class EquipmentTypeServiceImpl implements EquipmentTypeService {
     private final EquipmentTypeRepository equipmentTypeRepository;
 
     @Override
-    public List<EquipmentTypeDto> getAll() {
-        List<EquipmentType> types = equipmentTypeRepository.findAll();
-        return types.stream()
-                .map(EquipmentTypeDto::new).collect(Collectors.toList());
+    public List<EquipmentTypeStatistic> getAll() {
+        List<EquipmentTypeStatistic> types = equipmentTypeRepository.getTypeStatistic();
+        return types;
     }
 
     @Override

@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthUserResponse login(LoginDto loginDto) {
         if (!userRepository.existsByUsername(loginDto.getUsername())) {
-            throw new APIException(HttpStatus.BAD_REQUEST, "Email is not registered");
+            throw new APIException(HttpStatus.BAD_REQUEST, "Username is not registered");
         }
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -44,16 +44,16 @@ public class AuthServiceImpl implements AuthService {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtTokenProvider.generateToken(authentication);
-            return new AuthUserResponse((UserDetailsImpl) authentication.getPrincipal(), token);
+            return new AuthUserResponse(authentication, token);
         } catch (BadCredentialsException ex) {
-            throw new APIException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+            throw new APIException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
     }
 
     @Override
     public User register(RegisterDto registerDto) {
         if (userRepository.existsByUsername(registerDto.getUsername())) {
-            throw new APIException(HttpStatus.BAD_REQUEST, "Email is already exists!");
+            throw new APIException(HttpStatus.BAD_REQUEST, "Username is already exists!");
         }
         User user = new User();
         user.setUsername(registerDto.getUsername());
