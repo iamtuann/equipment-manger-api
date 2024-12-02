@@ -9,4 +9,6 @@ public interface AuthService {
     AuthUserResponse login(LoginDto loginDto);
 
     User register(RegisterDto registerDto);
+
+    void update(long id, RegisterDto registerDto);
 }

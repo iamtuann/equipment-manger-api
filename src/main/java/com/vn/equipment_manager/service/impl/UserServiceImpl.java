@@ -1,6 +1,7 @@
 package com.vn.equipment_manager.service.impl;
 
 import com.vn.equipment_manager.entity.User;
+import com.vn.equipment_manager.enums.EUserStatus;
 import com.vn.equipment_manager.exception.ResourceNotFoundException;
 import com.vn.equipment_manager.model.UserDto;
 import com.vn.equipment_manager.repository.UserRepository;
@@ -18,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByStatus(EUserStatus.ACTIVE.getValue());
         return users.stream().map(UserDto::new).collect(Collectors.toList());
     }
 

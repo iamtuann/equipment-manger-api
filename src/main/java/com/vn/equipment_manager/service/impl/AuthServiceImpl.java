@@ -2,14 +2,15 @@ package com.vn.equipment_manager.service.impl;
 
 import com.vn.equipment_manager.entity.Role;
 import com.vn.equipment_manager.entity.User;
+import com.vn.equipment_manager.enums.EUserStatus;
 import com.vn.equipment_manager.exception.APIException;
+import com.vn.equipment_manager.exception.ResourceNotFoundException;
 import com.vn.equipment_manager.model.AuthUserResponse;
 import com.vn.equipment_manager.model.request.LoginDto;
 import com.vn.equipment_manager.model.request.RegisterDto;
 import com.vn.equipment_manager.repository.RoleRepository;
 import com.vn.equipment_manager.repository.UserRepository;
 import com.vn.equipment_manager.security.JwtTokenProvider;
-import com.vn.equipment_manager.security.UserDetailsImpl;
 import com.vn.equipment_manager.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -61,11 +62,32 @@ public class AuthServiceImpl implements AuthService {
         user.setFirstName(registerDto.getFirstName());
         user.setLastName(registerDto.getLastName());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        user.setStatus(EUserStatus.ACTIVE.getValue());
         Set<Role> roles = new HashSet<>();
         for (Long id : registerDto.getRoleIds()) {
             roles.add(roleRepository.findRoleById(id));
         }
         user.setRoles(roles);
         return userRepository.save(user);
+    }
+
+    @Override
+    public void update(long id, RegisterDto registerDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        if (userRepository.existsByUsername(registerDto.getUsername())) {
+            throw new APIException(HttpStatus.BAD_REQUEST, "Username is already exists!");
+        }
+        user.setUsername(registerDto.getUsername());
+        user.setEmail(registerDto.getEmail());
+        user.setFirstName(registerDto.getFirstName());
+        user.setLastName(registerDto.getLastName());
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+        Set<Role> roles = new HashSet<>();
+        for (Long roleId : registerDto.getRoleIds()) {
+            roles.add(roleRepository.findRoleById(roleId));
+        }
+        user.setRoles(roles);
+        userRepository.save(user);
     }
 }
