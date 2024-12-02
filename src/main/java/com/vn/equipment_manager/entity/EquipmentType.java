@@ -28,4 +28,14 @@ public class EquipmentType {
     @Column(name = "price")
     private Double price;
 
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = new Date();
+    }
 }
