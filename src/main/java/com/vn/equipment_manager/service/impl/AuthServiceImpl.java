@@ -11,6 +11,7 @@ import com.vn.equipment_manager.model.request.RegisterDto;
 import com.vn.equipment_manager.repository.RoleRepository;
 import com.vn.equipment_manager.repository.UserRepository;
 import com.vn.equipment_manager.security.JwtTokenProvider;
+import com.vn.equipment_manager.security.UserDetailsImpl;
 import com.vn.equipment_manager.service.AuthService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,9 @@ public class AuthServiceImpl implements AuthService {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String token = jwtTokenProvider.generateToken(authentication);
-            return new AuthUserResponse(authentication, token);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User user = userRepository.findUserById(userDetails.getId());
+            return new AuthUserResponse(authentication, token, user.getRoles());
         } catch (BadCredentialsException ex) {
             throw new APIException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }

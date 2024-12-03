@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -25,15 +26,13 @@ public class AuthUserResponse {
     private String token;
     private List<String> roles;
 
-    public AuthUserResponse(Authentication authentication, String token) {
+    public AuthUserResponse(Authentication authentication, String token, Set<Role> roles) {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         this.id = userDetails.getId();
         this.username = userDetails.getUsername();
         this.firstName = userDetails.getFirstName();
         this.lastName = userDetails.getLastName();
-        this.roles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+        this.roles = roles.stream().map(Role::getDisplayName).toList();
         this.token = token;
     }
 
