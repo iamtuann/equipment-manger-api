@@ -48,9 +48,17 @@ public class ImportReceipt {
     @Column(name = "items")
     private String items;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "approved_by")
+    private User approvedBy;
+
+    @Column(name = "approved_at")
+    private Date approvedAt;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 
     @PreUpdate

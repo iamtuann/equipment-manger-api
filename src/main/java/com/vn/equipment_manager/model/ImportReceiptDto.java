@@ -19,10 +19,12 @@ public class ImportReceiptDto {
     private Date importDate;
     private String note;
     private UserBasic createdBy;
+    private UserBasic approvedBy;
     private Integer status;
     private Double totalAmount;
     private Date createdAt;
     private Date updatedAt;
+    private Date approvedAt;
     List<ImportReceiptItem> items;
 
     public ImportReceiptDto(ImportReceipt receipt) {
@@ -31,9 +33,11 @@ public class ImportReceiptDto {
         this.importDate = receipt.getImportDate();
         this.note = receipt.getNote();
         this.createdBy = new UserBasic(receipt.getCreatedBy());
+        this.approvedBy = receipt.getApprovedBy() != null ? new UserBasic(receipt.getApprovedBy()) : null;
         this.status = receipt.getStatus();
         this.totalAmount = receipt.getTotalAmount();
         this.createdAt = receipt.getCreatedAt();
         this.updatedAt = receipt.getUpdatedAt();
+        this.approvedAt = receipt.getApprovedAt();
     }
 }

@@ -6,12 +6,17 @@ import com.vn.equipment_manager.model.request.ImportReceiptRequest;
 import com.vn.equipment_manager.security.UserDetailsImpl;
 import com.vn.equipment_manager.service.ImportReceiptService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -20,19 +25,31 @@ public class ImportReceiptController {
     private final ImportReceiptService importReceiptService;
 
     @GetMapping("")
-    public ResponseEntity<List<ImportReceiptDto>> getAll(@RequestParam(value = "status", required = false) String statusString) {
-        List<ImportReceiptDto> response = new ArrayList<>();
-        if (statusString != null) {
-            Integer status = switch (statusString) {
-                case "pending" -> EReceiptStatus.PENDING.getValue();
-                case "approved" -> EReceiptStatus.APPROVED.getValue();
-                case "rejected" -> EReceiptStatus.REJECTED.getValue();
-                default -> null;
-            };
-            response = importReceiptService.getAllByStatus(status);
+    public ResponseEntity<Page<ImportReceiptDto>> search(
+            @RequestParam(value = "code", required = false) String code,
+            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "importDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date importDate,
+            @RequestParam(value = "createdBy", required = false) String username,
+            @RequestParam(value = "createdAt", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date createdAt,
+            @RequestParam(value = "updatedAt", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date updatedAt,
+            @RequestParam(value = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(value = "pageSize", defaultValue = "20", required = false) int pageSize,
+            @RequestParam(value = "key", required = false) String key,
+            @RequestParam(value = "orderBy", required = false) String orderBy
+    ) {
+        Sort sort;
+        Pageable pageable;
+        if (key != null && !key.isEmpty()) {
+            if (orderBy.equals("asc")) {
+                sort = Sort.by(key).ascending();
+            } else {
+                sort = Sort.by(key).descending();
+            }
         } else {
-            response = importReceiptService.getAll();
+            sort = Sort.by("createdAt").ascending();
         }
+        pageable = PageRequest.of(page - 1, pageSize, sort);
+        Page<ImportReceiptDto> response = importReceiptService.search(code, status, importDate, username, createdAt, updatedAt, pageable);
         return ResponseEntity.ok(response);
     }
 
@@ -46,5 +63,18 @@ public class ImportReceiptController {
     public ResponseEntity<?> create(@RequestBody ImportReceiptRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         importReceiptService.create(request, userDetails.getId());
         return ResponseEntity.ok("Create ImportReceipt successfully!");
+    }
+
+    @PutMapping("{id}/change-status")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, String> request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Integer status = Integer.valueOf(request.get("status"));
+        importReceiptService.changeStatus(id, status, userDetails.getId());
+        return ResponseEntity.ok("Approved ImportReceipt successfully!");
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        importReceiptService.delete(id);
+        return ResponseEntity.ok("Delete ImportReceipt successfully!");
     }
 }
