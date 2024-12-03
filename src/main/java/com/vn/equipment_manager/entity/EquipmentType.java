@@ -32,6 +32,9 @@ public class EquipmentType {
     @OneToMany(mappedBy = "type", fetch = FetchType.LAZY)
     private List<Equipment> equipments;
 
+    @Column(name = "code", length = 45)
+    private String code;
+
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
