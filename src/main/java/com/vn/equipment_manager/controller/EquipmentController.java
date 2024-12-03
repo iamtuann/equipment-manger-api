@@ -1,7 +1,9 @@
 package com.vn.equipment_manager.controller;
 
 import com.vn.equipment_manager.model.EquipmentDto;
+import com.vn.equipment_manager.model.request.EquipmentDepartmentRequest;
 import com.vn.equipment_manager.model.request.EquipmentRequest;
+import com.vn.equipment_manager.model.request.EquipmentStorageRequest;
 import com.vn.equipment_manager.service.EquipmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -49,6 +52,14 @@ public class EquipmentController {
         return ResponseEntity.ok(equipment);
     }
 
+    @GetMapping("all/in-storage")
+    public ResponseEntity<List<EquipmentDto>> getAllInStorage(@RequestParam(value = "status", required = false) Integer status,
+                                                        @RequestParam(value = "typeId", required = false) Long typeId,
+                                                        @RequestParam(value = "storageId", required = false) Long storageId) {
+        List<EquipmentDto> response = equipmentService.getAllInStorage(typeId, storageId, status);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<EquipmentDto> getById(@PathVariable Long id) {
         EquipmentDto response = equipmentService.getById(id);
@@ -59,6 +70,18 @@ public class EquipmentController {
     public ResponseEntity<?> create(@RequestBody EquipmentRequest request) {
         equipmentService.create(request);
         return ResponseEntity.ok("Create Equipment successfully!");
+    }
+
+    @PostMapping("add-to-department")
+    public ResponseEntity<?> addToDepartment(@RequestBody EquipmentDepartmentRequest request) {
+        equipmentService.addToDepartment(request);
+        return ResponseEntity.ok("Add Equipment to Department successfully!");
+    }
+
+    @PostMapping("add-to-storage")
+    public ResponseEntity<?> addToStorage(@RequestBody EquipmentStorageRequest request) {
+        equipmentService.addToStorage(request);
+        return ResponseEntity.ok("Add Equipment to Department successfully!");
     }
 
     @PutMapping("{id}")

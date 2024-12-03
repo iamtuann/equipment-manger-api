@@ -9,11 +9,22 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository(value = "equipmentRepository")
 public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
 
     boolean existsByCode(String code);
+
+    @Query(value = "SELECT e FROM Equipment e " +
+            "WHERE e.department.id IS NULL " +
+            "AND (:status IS NULL OR e.status = :status) " +
+            "AND (:typeId IS NULL OR e.type.id = :typeId) " +
+            "AND (e.storage.id IS NOT NULL)" +
+            "AND (:storageId IS NULL OR e.storage.id = :storageId)")
+    List<Equipment> findAllInStorage(@Param(value = "typeId") Long typeId,
+                                     @Param(value = "storageId") Long storageId,
+                                     @Param(value = "status") Integer status);
 
     @Query(value = "SELECT e FROM Equipment e " +
             "WHERE (:code IS NULL OR :code = '' OR (e.code LIKE CONCAT('%', :code, '%'))) " +

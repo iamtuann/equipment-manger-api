@@ -1,10 +1,14 @@
 package com.vn.equipment_manager.service.impl;
 
+import com.vn.equipment_manager.entity.Department;
 import com.vn.equipment_manager.entity.Equipment;
+import com.vn.equipment_manager.entity.Storage;
 import com.vn.equipment_manager.exception.BadRequestException;
 import com.vn.equipment_manager.exception.ResourceNotFoundException;
 import com.vn.equipment_manager.model.EquipmentDto;
+import com.vn.equipment_manager.model.request.EquipmentDepartmentRequest;
 import com.vn.equipment_manager.model.request.EquipmentRequest;
+import com.vn.equipment_manager.model.request.EquipmentStorageRequest;
 import com.vn.equipment_manager.repository.DepartmentRepository;
 import com.vn.equipment_manager.repository.EquipmentRepository;
 import com.vn.equipment_manager.repository.EquipmentTypeRepository;
@@ -18,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +37,13 @@ public class EquipmentServiceImpl implements EquipmentService {
         List<EquipmentDto> equipments = equipmentPage.stream()
                 .map(EquipmentDto::new).toList();
         return new PageImpl<>(equipments, pageable, equipmentPage.getTotalElements());
+    }
+
+    @Override
+    public List<EquipmentDto> getAllInStorage(Long typeId, Long storageId, Integer status) {
+        List<Equipment> equipment = equipmentRepository.findAllInStorage(typeId, storageId, status);
+        return equipment.stream()
+                .map(EquipmentDto::new).toList();
     }
 
     @Override
@@ -81,11 +91,13 @@ public class EquipmentServiceImpl implements EquipmentService {
         }
         if (request.getDepartmentId() != null) {
             equipment.setDepartment(departmentRepository.findDepartmentById(request.getDepartmentId()));
+            equipment.setStorage(null);
         } else {
             equipment.setDepartment(null);
         }
         if (request.getStorageId() != null) {
             equipment.setStorage(storageRepository.findStorageById(request.getStorageId()));
+            equipment.setDepartment(null);
         } else {
             equipment.setStorage(null);
         }
@@ -100,5 +112,31 @@ public class EquipmentServiceImpl implements EquipmentService {
         } else {
             throw new ResourceNotFoundException("Equipment", "id", id);
         }
+    }
+
+    @Override
+    public void addToDepartment(EquipmentDepartmentRequest request) {
+        Department department = departmentRepository.findById(request.getDepartmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "id", request.getDepartmentId()));
+
+        List<Equipment> equipments = equipmentRepository.findAllById(request.getEquipmentIds());
+        for (Equipment equipment : equipments) {
+            equipment.setStorage(null);
+            equipment.setDepartment(department);
+        }
+        equipmentRepository.saveAll(equipments);
+    }
+
+    @Override
+    public void addToStorage(EquipmentStorageRequest request) {
+        Storage storage = storageRepository.findById(request.getStorageId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "id", request.getStorageId()));
+
+        List<Equipment> equipments = equipmentRepository.findAllById(request.getEquipmentIds());
+        for (Equipment equipment : equipments) {
+            equipment.setStorage(storage);
+            equipment.setDepartment(null);
+        }
+        equipmentRepository.saveAll(equipments);
     }
 }
